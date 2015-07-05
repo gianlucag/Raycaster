@@ -1,4 +1,4 @@
-==Raycaster==
+##Raycaster##
 
 Una semplice implementazione C++ di un engine 3D basato sul metodo raycasting.
 
@@ -20,7 +20,7 @@ Ecco come si presenta l'editor delle mappe in Wolfentein 3D (primo livello):
 
 L'intero ambiente 3D è rappresentabile da una mappa bidimensionale con vista dall'alto. I vincoli rendono impossibli elementi come piani obliqui, saltare, guardare in alto, in basso o accovacciarsi. Motori grafici tipo <a href="http://en.wikipedia.org/wiki/Build_engine">Build</a> (utilizzato in Duke Nukem 3D), sebbene basati esclusivamente sul raycasting, hanno introdotto tutti questi elementi pur essendo trattati nel codice come casi speciali (qui un'ottima <a href="http://fabiensanglard.net/duke3d/">review</a> del motore Build).
 
-===Come funziona il raycasting?===
+###Come funziona il raycasting###
 
 Definiti la posizione e la direzione del punto di vista all'interno della griglia-mondo il raycasting procede in questo modo: per ogni riga di pixel verticale dello schermo viene "lanciato" un raggio (da qui il termine ray-casting) che parte dalla posizione corrente del giocatore e prosegue in avanti ad esso. Ad esempio, con una risoluzione di 1024 pixel in orizzontale verranno lanciati 1024 raggi in avanti ma ognuno ad una angolazione leggermente differente. Il raggio prosegue all'interno della griglia-mondo (in avanti rispetto al giocatore) fino a che non incontrerà una cella piena (un blocco-muro). A quel punto viene calcolata la lunghezza del raggio che corrisponde alla distanza effettiva del giocatore da quel muro. Il valore distanza viene utilizzato per calcolare quanto lunga dovrà essere disegnata la linea di pixel sullo schermo a quella data riga; più il raggio è lungo più corta sarà la linea verticale disegnata (muro lontano), più il raggio è corto più la linea sarà disegnata lunga (muro vicino). In figura si mostra come procede l'algoritmo: la vista è dall'alto, il punto verde è il giocatore, la riga nera è il piano di camera (lo schermo). Alcuni raggi (in giallo) campionano la mappa (notare le differenti lunghezze rilevate):
 
@@ -48,7 +48,7 @@ Per una mappa di NxN blocchi l'algoritmo richiede al più 2N controlli di collis
 
 Gli engine raycasting non ammettono "spazi aperti" ossia configurazioni di blocchi che non separano completamente lo spazio esterno dall'interno. Mappe aperte non lasciano terminare l'algoritmo (il raggio potenzialmente può non intersecare mai alcun blocco pieno) e quindi non sono ammesse. Una soluzione è quella di creare blocchi "invisibili" che chiudono la mappa come richiesto ma che poi non vengono disegnati su schermo.
 
-===Posizione, direzione del giocatore e piano di camera===
+###Posizione, direzione del giocatore e piano di camera###
 
 Prima di poter creare l'algoritmo vero e proprio occorre definire esattamente cosa è il giocatore. Il giocatore è definito da tre parametri:
 <ul>
@@ -76,7 +76,7 @@ Piccoli valori del modulo del vettore direzione generano una FOV ampia (zoom-out
 
 Per un motore grafico una buon valore del modulo direzione è quello che genera una FOV di circa 66 gradi. Valori più grandi generano forti distorsioni all'immagine mentre valori troppo piccoli danno l'impressione di vedere tramite un forte zoom.
 
-===Generazione dei raggi===
+###Generazione dei raggi###
 
 <strong></strong>La generazione di un raggio uscente dal giocatore si traduce nella somma dei due vettori direzione e segmento di camera. Ad esempio, per uno schermo di 1024 pixel in orizzontale dobbiamo lanciare 1024 raggi aventi origine in posX, posY (posizione giocatore) ed intersecanti il segmento di camera ognuno in un punto differente. Il primo raggio (raggio 0) interseca il segmento di camera all'estrema sinistra: questo sarà il raggio lanciato per la riga 0 dello schermo (prima riga a sinistra, x=0). Il 1023 raggio (l'ultimo) interesecherà il segmento di camera all'estrema destra (ultima riga di pixel dello schermo, x=1023). Gli altri raggi saranno calcolati tramite uno scostamento progressivo e lineare lungo il segmento di camera.
 
@@ -88,7 +88,7 @@ In generale, per generare l'x-esimo raggio (vettore rayX, rayY)  basta suddivid
 
 <a href="http://www.gianlucaghettini.net/wp-content/uploads/2014/03/somma_vettori.png"><img class="alignnone size-full wp-image-335" alt="somma_vettori" src="http://www.gianlucaghettini.net/wp-content/uploads/2014/03/somma_vettori.png" width="496" height="360" /></a>
 
-===Algoritmo di rendering===
+###Algoritmo di rendering###
 
 Definito il giocatore e i raggi possiamo finalmente chiarire l'algoritmo di rendering vero e proprio. Il rendering di un singolo frame prevede i seguenti passi:
 
@@ -103,7 +103,7 @@ passo 2) per ogni riga di pixel dello schermo:
 	<li>tracciare una linea verticale alta h pixel. h è scelto in funzione della lunghezza del raggio (più il raggio è lungo, più h è basso e viceversa). Il colore della linea verticale può essere dato dal tipo di blocco incontrato (blocco blu, blocco rosso, blocco verde, etc... etc... possiamo definire quanti tipi di blocchi vogliamo)</li>
 </ul>
 
-===Definizione della mappa===
+###Definizione della mappa###
 
 La mappa può essere definita da un semplice file di testo. Ad esempio, nel mio caso le prime due righe indicano rispettivamente la larghezza e la lunghezza (in blocchi) della mappa. In questo caso 64x64 blocchi. Le righe successive definiscono graficamente la mappa 2D. Ogni numero corrisponde ad un blocco solido di tipo (colore) diverso, blocco 1, 2, 3 e 4. Gli spazi bianchi definiscono i blocchi vuoti (spazi vuoti). <a href="http://www.gianlucaghettini.net/wp-content/uploads/2014/03/world.txt" target="_blank">world.txt</a>
 
@@ -111,7 +111,7 @@ La mappa può essere definita da un semplice file di testo. Ad esempio, nel mio 
 
 definiamo ad esempio il blocco tipo '1' verde, il blocco tipo '2' bianco, il blocco tipo '3' blu e il blocco tipo '4' rosso.
 
-===Movimento===
+###Movimento###
 
 Il giocatore può muoversi in due modi distinti:
 <ul>
